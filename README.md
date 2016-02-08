@@ -16,8 +16,9 @@ fab -l
 Available commands:
 
     gen_ca_key      generate CA cert keys
-    gen_client_key  generate client cert files, useremail need be provided.
-    revoke_cert     remove client cert by email
+    gen_client_key  generate client cert files, user email need be provided.
+    revoke_cert     revoke client cert by email, will also update crl.cem file and delete the client cert folder
+    update_crl      update crl.pem file
 ```
 
 # Basic usage
@@ -52,6 +53,14 @@ After that, a folded based on user email will be created, and inside it will hav
 
 Generally, you should send the `client.p12` and the 4 digits pincode in `client.pin` to your user.
 
+### 3. Generate initial crl.pem (Only need to do once)
+
+The following command will generate an empty revoke list file `index.txt` and signed crl file `crl.pem`
+
+```
+fab update_crl
+```
+
 # Setup the web server
 
 We'll use nginx as our example web server.
@@ -61,6 +70,7 @@ To activate SSL client side certification, add following lines into your nginx s
 ```
 ssl_client_certificate /path/to/ca.crt;
 ssl_verify_client optional;
+ssl_crl /path/to/crl.pem;
 ```
 
 and this if block for checking if the client passed the SSL verification
@@ -69,4 +79,12 @@ and this if block for checking if the client passed the SSL verification
 if ($ssl_client_verify != SUCCESS){
   return 403;
 }
+```
+
+# Revoke client certification
+
+To revoke single client certification, use following command
+
+```
+fab revoke_cert:test@test.com
 ```

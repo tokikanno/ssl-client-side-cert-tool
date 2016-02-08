@@ -2,7 +2,7 @@
 
 This is a simple python script for fast generating CA/client keys for SSL client side certification.
 
-# pre-requirements
+# Pre-requirements
 
 The only dependency is `fabric`, use `pip install fabric` to install it.
 

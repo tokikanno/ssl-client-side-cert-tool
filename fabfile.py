@@ -33,6 +33,7 @@ def gen_ca_key():
     }
 
     local('openssl req -new -newkey rsa:4096 -x509 -days 365 -nodes -keyout ca.key -out ca.crt -subj %(subj)s' % ctx)
+    local('chmod 600 ca.crt ca.key')
 
 
 def gen_client_key(email):
@@ -55,6 +56,7 @@ def gen_client_key(email):
     print blue('generating client key')
 
     local('openssl req -new -newkey rsa:4096 -nodes -keyout %(client_path)s/client.key -out %(client_path)s/client.crt -subj %(subj)s' % ctx)
+    local('chmod 600 %(client_path)s/client.key %(client_path)s/client.crt')
 
     print blue('signing with ca.key')
     local('openssl x509 -req -days 365 -in %(client_path)s/client.crt -CA ca.crt -CAkey ca.key -CAcreateserial -CAserial ca.serial -out %(client_path)s/sign.crt' % ctx)

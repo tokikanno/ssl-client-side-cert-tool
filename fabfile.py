@@ -3,6 +3,7 @@ from fabric.colors import blue, green, red
 import random
 import string
 import os
+import shutil
 
 
 _CA_CN = 'pinkoi.com'
@@ -73,7 +74,9 @@ def gen_client_key(email):
 
 def revoke_cert(email):
     '''
-    remove client cert by email
+    revoke client cert by email, will also update crl.cem file and delete the client cert folder
+
+    DO remember restart web server after clr.cem updated
     '''
     assert email and '@' in email and '.' in email
 
@@ -89,12 +92,17 @@ def revoke_cert(email):
     print 'revoking client cert of %(email)s' % ctx
     local('openssl ca -config ca.conf -revoke %(client_path)s/sign.crt -keyfile ca.key -cert ca.crt' % ctx)
 
+    print 'deleting client cert directory'
+    shutil.rmtree(ctx['client_path'])
+
     update_crl()
 
 
 def update_crl():
     '''
-    update crl file
+    update crl.pem file
+
+    DO remember restart web server after clr.cem updated
     '''
     if not os.path.exists('index.txt'):
         print 'no index.txt found, will create an empty one'

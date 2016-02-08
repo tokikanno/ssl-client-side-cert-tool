@@ -88,8 +88,6 @@ def revoke_cert(email):
 
     update_crl()
 
-    print green('Done, ') + red('DO REMERMBER RELOAD Nginx!')
-
 
 def update_crl():
     '''
@@ -102,3 +100,4 @@ def update_crl():
 
     print 'updating crl.pem'
     local('openssl ca -config ca.conf -gencrl -out crl.pem')
+    print green('Done, ') + red('DO REMERMBER RELOAD Nginx!')

@@ -88,3 +88,7 @@ To revoke single client certification, use following command
 ```
 fab revoke_cert:test@test.com
 ```
+
+This command will revoke & delete client cert associated with provieded email, and will also update the crl.pem.
+
+After crl.pem updated, DO remember reload web server.

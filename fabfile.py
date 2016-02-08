@@ -6,6 +6,7 @@ import os
 
 
 _CA_CN = 'pinkoi.com'
+_CLIENT_FOLDER = 'client'
 _DEFAULT_SUBJ_TPL = '"/C=TW/ST=Taiwan/L=Taipei/O=Pinkoi Inc./OU=Dev/CN=%s"'
 _PIN_LENGTH = 4
 
@@ -16,6 +17,10 @@ def _gen_export_pincode():
 
 def _printkv(k, v):
     print blue(k), green(v)
+
+
+def _get_client_folder(email):
+    return '%s/%s' % (_CLIENT_FOLDER, email)
 
 
 def gen_ca_key():
@@ -34,33 +39,33 @@ def gen_client_key(email):
     generate client cert files, user email need be provided.
     '''
     assert email and '@' in email and '.' in email
-    user = email.split('@')[0]
     _printkv('email:', email)
-    _printkv('user:', user)
-
-    if not os.path.exists(user):
-        os.mkdir(user)
-    print green('user %s key dir created' % user)
-    print blue('generating client key')
 
     ctx = {
         'epwd': _gen_export_pincode(),
         'subj': _DEFAULT_SUBJ_TPL % email,
-        'user': user,
+        'email': email,
+        'client_path': _get_client_folder(email)
     }
-    local('openssl req -new -newkey rsa:4096 -nodes -keyout %(user)s/client.key -out %(user)s/client.crt -subj %(subj)s' % ctx)
+
+    if not os.path.exists(ctx['client_path']):
+        os.makedirs(ctx['client_path'])
+    print green('user key dir (%(client_path)s) created' % ctx)
+    print blue('generating client key')
+
+    local('openssl req -new -newkey rsa:4096 -nodes -keyout %(client_path)s/client.key -out %(client_path)s/client.crt -subj %(subj)s' % ctx)
 
     print blue('signing with ca.key')
-    local('openssl x509 -req -days 365 -in %(user)s/client.crt -CA ca.crt -CAkey ca.key -CAcreateserial -CAserial ca.serial -out %(user)s/sign.crt' % ctx)
+    local('openssl x509 -req -days 365 -in %(client_path)s/client.crt -CA ca.crt -CAkey ca.key -CAcreateserial -CAserial ca.serial -out %(client_path)s/sign.crt' % ctx)
 
     print blue('generating p12')
-    local('openssl pkcs12 -export -clcerts -in %(user)s/sign.crt -inkey %(user)s/client.key -out %(user)s/client.p12 -passout pass:%(epwd)s' % ctx)
+    local('openssl pkcs12 -export -clcerts -in %(client_path)s/sign.crt -inkey %(client_path)s/client.key -out %(client_path)s/client.p12 -passout pass:%(epwd)s' % ctx)
 
     print blue('generating pem')
-    local('openssl pkcs12 -in %(user)s/client.p12 -out %(user)s/client.pem -clcerts -passin pass:%(epwd)s -nodes' % ctx)
+    local('openssl pkcs12 -in %(client_path)s/client.p12 -out %(client_path)s/client.pem -clcerts -passin pass:%(epwd)s -nodes' % ctx)
 
     _printkv('export password', ctx['epwd'])
-    with open('%(user)s/client.pin' % ctx, 'w') as f:
+    with open('%(client_path)s/client.pin' % ctx, 'w') as f:
         f.write(ctx['epwd'])
 
     print green('done')
@@ -71,20 +76,18 @@ def revoke_cert(email):
     remove client cert by email
     '''
     assert email and '@' in email and '.' in email
-    user = email.split('@')[0]
-    _printkv('email:', email)
-    _printkv('user:', user)
 
     ctx = {
-        'user': user,
+        'email': email,
+        'client_path': _get_client_folder(email)
     }
 
-    if not os.path.exists(user):
-        print red('user %(user)s not exists' % ctx)
+    if not os.path.exists(ctx['client_path']):
+        print red('user %(email)s not exists' % ctx)
         return
 
-    print 'revoking client cert of %(user)s' % ctx
-    local('openssl ca -config ca.conf -revoke %(user)s/sign.crt -keyfile ca.key -cert ca.crt' % ctx)
+    print 'revoking client cert of %(email)s' % ctx
+    local('openssl ca -config ca.conf -revoke %(client_path)s/sign.crt -keyfile ca.key -cert ca.crt' % ctx)
 
     update_crl()
 

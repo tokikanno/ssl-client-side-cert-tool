@@ -70,3 +70,5 @@ target/
 *.key
 *.crt
 *.pem
+*.p12
+*.pin

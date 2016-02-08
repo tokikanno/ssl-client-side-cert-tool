@@ -63,3 +63,10 @@ target/
 
 # vim swap file
 *.swp
+
+# cert realted files
+*.txt
+*.serial
+*.key
+*.crt
+*.pem

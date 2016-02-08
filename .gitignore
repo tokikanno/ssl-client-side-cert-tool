@@ -65,6 +65,7 @@ target/
 *.swp
 
 # cert realted files
+index.txt*
 *.txt
 *.serial
 *.key

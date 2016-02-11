@@ -17,7 +17,7 @@ Available commands:
 
     gen_ca_key      generate CA cert keys
     gen_client_key  generate client cert files, user email need to be provided.
-    revoke_cert     revoke client cert by email, will also update crl.cem file and delete the client cert folder
+    revoke_cert     revoke client cert by email, will also update crl.pem file and delete the client cert folder
     update_crl      update crl.pem file
 ```
 

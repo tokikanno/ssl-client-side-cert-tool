@@ -76,9 +76,9 @@ def gen_client_key(email):
 
 def revoke_cert(email):
     '''
-    revoke client cert by email, will also update crl.cem file and delete the client cert folder
+    revoke client cert by email, will also update crl.pem file and delete the client cert folder
 
-    DO remember restart web server after clr.cem updated
+    DO remember restart web server after clr.pem updated
     '''
     assert email and '@' in email and '.' in email
 
@@ -104,7 +104,7 @@ def update_crl():
     '''
     update crl.pem file
 
-    DO remember restart web server after clr.cem updated
+    DO remember restart web server after clr.pem updated
     '''
     if not os.path.exists('index.txt'):
         print 'no index.txt found, will create an empty one'

@@ -38,7 +38,7 @@ def gen_ca_key():
 
 def gen_client_key(email):
     '''
-    generate client cert files, user email need be provided.
+    generate client cert files, user email need to be provided.
     '''
     assert email and '@' in email and '.' in email
     _printkv('email:', email)

@@ -41,7 +41,7 @@ After the ca key paris created, you may start generating client keys. A client e
 fab gen_client_key:test@test.com
 ```
 
-After that, a folded based on user email will be created, and inside it will have following files
+After that, a folder based on user email will be created, and inside it will have following files
 
 
 * client.key - the client private key

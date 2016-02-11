@@ -48,14 +48,14 @@ After that, a folded based on user email will be created, and inside it will hav
 * client.crt - the client cert file
 * sign.crt   - the ca-signed client cert file, it will be used for generating client.p12/client.pem
 * client.p12 - client cert file for operating systems (eg: Windows, OSX)
-* client.pin - for security reason, some OS will force asks for an export pin code, a 4 digits pin code will be randomly generated and saved in this file.
+* client.pin - for security reason, some OS will force asks for an export pin code, a 4 digits pin code will be randomly generated and saved into this file.
 * client.pem - client cert file in pem format, could be used for curl with following command `curl -k -cacert client.pem https:/xxx.xxx`
 
 Generally, you should send the `client.p12` and the 4 digits pincode in `client.pin` to your user.
 
 ### 3. Generate initial crl.pem (Only need to do once)
 
-The following command will generate an empty revoke list file `index.txt` and signed crl file `crl.pem`
+The following command will generate an empty revoke list file `index.txt` and a signed crl file `crl.pem` if not exist.
 
 ```
 fab update_crl

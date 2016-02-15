@@ -8,7 +8,9 @@ import shutil
 
 _CA_CN = 'pinkoi.com'
 _CLIENT_FOLDER = 'client'
-_DEFAULT_SUBJ_TPL = '"/C=TW/ST=Taiwan/L=Taipei/O=Pinkoi Inc./OU=Dev/CN=%s"'
+_DEFAULT_CA_OU = 'DEV'
+_DEFAULT_OU = 'USER'
+_DEFAULT_SUBJ_TPL = '"/C=TW/ST=Taiwan/L=Taipei/O=Pinkoi Inc./OU=%s/CN=%s"'
 _PIN_LENGTH = 4
 
 
@@ -29,14 +31,14 @@ def gen_ca_key():
     generate CA cert keys
     '''
     ctx = {
-        'subj': _DEFAULT_SUBJ_TPL % _CA_CN,
+        'subj': _DEFAULT_SUBJ_TPL % (_DEFAULT_CA_OU, _CA_CN),
     }
 
     local('openssl req -new -newkey rsa:4096 -x509 -days 365 -nodes -keyout ca.key -out ca.crt -subj %(subj)s' % ctx)
     local('chmod 600 ca.crt ca.key')
 
 
-def gen_client_key(email):
+def gen_client_key(email, ou=None):
     '''
     generate client cert files, user email need to be provided.
     '''
@@ -45,7 +47,7 @@ def gen_client_key(email):
 
     ctx = {
         'epwd': _gen_export_pincode(),
-        'subj': _DEFAULT_SUBJ_TPL % email,
+        'subj': _DEFAULT_SUBJ_TPL % (ou.upper() or _DEFAULT_OU, email),
         'email': email,
         'client_path': _get_client_folder(email)
     }

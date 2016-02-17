@@ -35,6 +35,7 @@ fab gen_ca_key
 After successfully executed, `ca.crt` & `ca.key` will be generated automatically. 
 
 The `ca.key` is the private key of CA, plz keep it out from other user carefully.
+
 The `ca.crt` is the public certification file of CA, this file need to be accessable to the web server process for verifying a client SSL cert. The crt is valid for 365 days, after that, you should extend or just generate a new CA cert.
 
 

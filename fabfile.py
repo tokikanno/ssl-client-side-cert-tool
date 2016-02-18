@@ -47,7 +47,7 @@ def gen_client_key(email, ou=None):
 
     ctx = {
         'epwd': _gen_export_pincode(),
-        'subj': _DEFAULT_SUBJ_TPL % (ou.upper() or _DEFAULT_OU, email),
+        'subj': _DEFAULT_SUBJ_TPL % (ou or _DEFAULT_OU, email),
         'email': email,
         'client_path': _get_client_folder(email)
     }

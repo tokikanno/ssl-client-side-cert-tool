@@ -47,6 +47,12 @@ After the ca key paris created, you may start generating client keys. A client e
 fab gen_client_key:test@test.com
 ```
 
+or you could also pass the 2nd parameter to override the default OU
+
+```
+fab gen_client_key:test@test.com,DEV
+```
+
 After that, a folder based on user email will be created, and inside it will have following files
 
 

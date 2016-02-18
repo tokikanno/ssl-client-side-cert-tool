@@ -26,13 +26,18 @@ Available commands:
 
 ### 1. Generate CA key pairs
 For the 1st time using it, you'll need to generate the CA key pais fisrt. Simply run the following command will do this.
+**Caution: You should take a look in fabfile.py and change the `_DEFAULT_SUBJ_TPL` as you need.**
 
 ```
 fab gen_ca_key
 ```
 
 After successfully executed, `ca.crt` & `ca.key` will be generated automatically. 
-**Caution: You should take a look in fabfile.py and change the `_DEFAULT_SUBJ_TPL` as you need.**
+
+The `ca.key` is the private key of CA, plz keep it out from other user carefully.
+
+The `ca.crt` is the public certification file of CA, this file need to be accessable to the web server process for verifying a client SSL cert. The crt is valid for 365 days, after that, you should extend or just generate a new CA cert.
+
 
 ### 2. Generate client keys
 

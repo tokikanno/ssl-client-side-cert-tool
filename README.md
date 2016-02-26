@@ -121,7 +121,7 @@ For example, the following codes show how to only let user with CN=abc@example.c
 
 ```
 set $SSL_OU_CHECK "F";
-if ($ssl_client_s_dn ~ "CN=abc@example.com") {
+if ($ssl_client_s_dn ~ "CN=abc@example\.com") {
     set $SSL_OU_CHECK "P";
 }
 

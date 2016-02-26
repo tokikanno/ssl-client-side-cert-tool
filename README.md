@@ -107,7 +107,7 @@ After crl.pem updated, DO remember reload web server.
 
 # Advanced access control with Nginx
 
-Besides the `$ssl_client_verify` nginx ssl module variable, there is another variable is useful for acess control.
+Besides the `$ssl_client_verify` nginx ssl module variable, there is another variable also useful for acess control.
 That is the `$ssl_client_s_dn` variable.
 
 The `$ssl_client_s_dn` is the subject used for generating the client certification. It looks like:
